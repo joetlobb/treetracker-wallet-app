@@ -89,6 +89,10 @@ jobs:
 
       - name: Deploy to S3 Bucket
         run: |
+          if [ -z "${{ secrets.DEV_CDN_S3_BUCKET }}" ]; then
+            echo "Error: DEV_CDN_S3_BUCKET secret is missing or empty in repository settings."
+            exit 1
+          fi
           aws s3 sync build/ s3://${{ secrets.DEV_CDN_S3_BUCKET }}/ --delete
 
       - name: Invalidate CloudFront Cache
